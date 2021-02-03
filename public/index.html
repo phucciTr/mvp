@@ -5,15 +5,33 @@
   <script src="node_modules/jquery/dist/jquery.js"></script>
   <script src="node_modules/react/umd/react.development.js"></script>
   <script src="node_modules/react-dom/umd/react-dom.development.js"></script>
+  <link rel="stylesheet" href="styles/style.css"/>
   <link rel="shortcut icon" href="#"/>
 </head>
 
 <body>
   <div id="app">
     <h1>Hello</h1>
+    <div>
+      <input
+      id="pac-input"
+      class="controls"
+      type="text"
+      placeholder="Enter a location"
+      >
+    </div>
+
+    <div id="map"></div>
+    <div id="infowindow-content">
+      <span id="place-name" class="title"></span><br />
+      <strong>Place ID:</strong> <span id="place-id"></span><br />
+      <span id="place-address"></span>
+    </div>
   </div>
-  <script type="module" src="transpiled/src/index.js"></script>
   <script type="module" src="transpiled/src/ajax/parse.js"></script>
+  <script type="module" src="transpiled/src/index.js"></script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBWECNN1bTlHixhkqjHQ0Fgu2exLWOoK3E&libraries=places&v=weekly"></script>
+
 </body>
 
 </html>
