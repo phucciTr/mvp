@@ -1,17 +1,11 @@
 #map {
-  height: 80%;
+  height: 70%;
 }
 
 /* Optional: Makes the sample page fill the window. */
-html,
+html, #app, #map-display,
 body {
   height: 100%;
-  margin: 0;
-  padding: 0;
-}
-
-#app {
-  height: 80%;
   margin: 0;
   padding: 0;
 }
