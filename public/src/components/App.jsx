@@ -6,7 +6,13 @@ var App = () => (
       id="pac-input"
       className="controls"
       type="text"
-      placeholder="Enter a location"/>
+      placeholder="Enter start location"/>
+
+      <input
+      id="dest1"
+      className="controls"
+      type="text"
+      placeholder="Enter destination 1" />
     </div>
 
     <div id="map"></div>
