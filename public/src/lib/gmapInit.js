@@ -42,9 +42,7 @@ var placeChangeHandler = (autocomp) => {
   infowindow.close();
   let place = autocomp.getPlace();
 
-  if (!place.geometry) {
-    return;
-  }
+  if (!place.geometry) { return; }
 
   if (place.geometry.viewport) {
     map.fitBounds(place.geometry.viewport);
@@ -66,8 +64,38 @@ var placeChangeHandler = (autocomp) => {
   infowindow.open(map, marker);
 
   placesId.push(place.place_id);
-  console.log('placesId = ', placesId);
+
+  if (placesId[1]) {
+    const directionsService = new google.maps.DirectionsService();
+    const directionsRenderer = new google.maps.DirectionsRenderer();
+    directionsRenderer.setMap(map);
+
+    calculateAndDisplayRoute(directionsService, directionsRenderer);
+  }
 };
+
+
+var calculateAndDisplayRoute = (directionsService, directionsRenderer) => {
+
+  console.log('placesId = ', placesId);
+  directionsService.route(
+    {
+      origin: { placeId: placesId[0] },
+      destination: { placeId: placesId[1] },
+      travelMode: google.maps.TravelMode.DRIVING,
+    },
+    (response, status) => {
+      if (status === "OK") {
+        console.log('response = ', response);
+        directionsRenderer.setDirections(response);
+      } else {
+        window.alert("Directions request failed due to " + status);
+      }
+    }
+  );
+
+};
+
 
 
 export default initMap;

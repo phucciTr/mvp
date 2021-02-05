@@ -43,3 +43,8 @@ body {
 #map #infowindow-content {
   display: inline;
 }
+
+#dest {
+  position: relative;
+  left: 630px;
+}

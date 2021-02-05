@@ -8,11 +8,12 @@ var App = () => (
       type="text"
       placeholder="Enter start location"/>
 
+    <span id="dest">Enter destinations</span>
       <input
       id="dest1"
       className="controls"
       type="text"
-      placeholder="Enter destination 1" />
+      placeholder="Enter destination" />
     </div>
 
     <div id="map"></div>
