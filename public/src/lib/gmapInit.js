@@ -79,19 +79,26 @@ var placeChangeHandler = (autocomp, isWaypt) => {
   infowindow.open(map, marker);
 
   if (!isWaypt) { startEndIds.push(place.place_id); }
-  if (isWaypt) { waypts.push(place.place_id); }
+  if (isWaypt) {
+    waypts.push({
+        location: { placeId: place.place_id },
+        stopover: true
+    });
+  }
 };
 
 
 var calculateAndDisplayRoute = (directionsService, directionsRenderer) => {
 
   console.log('calculateAndDisplayRoute startEndIds = ', startEndIds);
+  console.log('calculateAndDisplayRoute waypts = ', waypts);
+
   directionsService.route(
     {
       origin: { placeId: startEndIds[0] },
       destination: { placeId: startEndIds[1] },
-      // waypoints: waypts,
-      // optimizeWaypoints: true,
+      waypoints: waypts,
+      optimizeWaypoints: true,
       travelMode: google.maps.TravelMode.DRIVING,
     },
     (response, status) => {
