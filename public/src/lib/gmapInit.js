@@ -1,43 +1,58 @@
-var placesId = [];
+var startEndIds = [];
+var waypts = [];
 var map, marker, infowindow, infowindowContent;
 
 
 function initMap() {
-  map = new google.maps.Map(document.getElementById("map"), {
+  map = new google.maps.Map($('#map')[0], {
     center: { lat: -33.8688, lng: 151.2195 },
     zoom: 13,
   });
 
-  const input = document.getElementById("pac-input");
-  const autocomplete = new google.maps.places.Autocomplete(input);
-  autocomplete.bindTo("bounds", map);
+  const directionsService = new google.maps.DirectionsService();
+  const directionsRenderer = new google.maps.DirectionsRenderer();
+  directionsRenderer.setMap(map);
 
-  const dest1 = document.getElementById('dest1');
-  const autocomplete1 = new google.maps.places.Autocomplete(dest1);
-  autocomplete1.bindTo('bounds', map);
+  $('#submit').click(() => calculateAndDisplayRoute(directionsService, directionsRenderer));
+
+  const startPoint = $('#start-point')[0];
+  const autocomplete = new google.maps.places.Autocomplete(startPoint);
+  autocomplete.bindTo('bounds', map);
+
+  const endPoint = $('#end-point')[0];
+  const ep_autocomplete = new google.maps.places.Autocomplete(endPoint);
+  ep_autocomplete.bindTo('bounds', map);
+
+  const destinations = $('#waypoints')[0];
+  const wp_autocomplete = new google.maps.places.Autocomplete(destinations);
+  wp_autocomplete.bindTo('bounds', map);
 
   // Specify just the place data fields that you need.
-  autocomplete.setFields(["place_id", "geometry", "name"]);
-  map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+  autocomplete.setFields(['place_id', 'geometry', 'name']);
+  map.controls[google.maps.ControlPosition.TOP_LEFT].push(startPoint);
 
-  autocomplete1.setFields(['place_id', 'geometry', 'name']);
-  map.controls[google.maps.ControlPosition.TOP_LEFT].push(dest1);
+  ep_autocomplete.setFields(['place_id', 'geometry', 'name']);
+  map.controls[google.maps.ControlPosition.LEFT_TOP].push(endPoint);
+
+  wp_autocomplete.setFields(['place_id', 'geometry', 'name']);
+  map.controls[google.maps.ControlPosition.TOP_LEFT].push(destinations);
 
   infowindow = new google.maps.InfoWindow();
-  infowindowContent = document.getElementById("infowindow-content");
+  infowindowContent = $('#infowindow-content')[0];
   infowindow.setContent(infowindowContent);
 
   marker = new google.maps.Marker({ map: map });
-  marker.addListener("click", () => {
+  marker.addListener('click', () => {
     infowindow.open(map, marker);
   });
 
-  autocomplete1.addListener('place_changed', placeChangeHandler.bind(this, autocomplete1))
-  autocomplete.addListener('place_changed', placeChangeHandler.bind(this, autocomplete));
+  autocomplete.addListener('place_changed', placeChangeHandler.bind(this, autocomplete, false));
+  wp_autocomplete.addListener('place_changed', placeChangeHandler.bind(this, wp_autocomplete, true));
+  ep_autocomplete.addListener('place_changed', placeChangeHandler.bind(this, ep_autocomplete, false))
 }
 
 
-var placeChangeHandler = (autocomp) => {
+var placeChangeHandler = (autocomp, isWaypt) => {
 
   infowindow.close();
   let place = autocomp.getPlace();
@@ -58,38 +73,33 @@ var placeChangeHandler = (autocomp) => {
   });
 
   marker.setVisible(true);
-  infowindowContent.children.namedItem("place-name").textContent = place.name;
-  infowindowContent.children.namedItem("place-id").textContent = place.place_id;
-  infowindowContent.children.namedItem("place-address").textContent = place.formatted_address;
+  infowindowContent.children.namedItem('place-name').textContent = place.name;
+  infowindowContent.children.namedItem('place-id').textContent = place.place_id;
+  infowindowContent.children.namedItem('place-address').textContent = place.formatted_address;
   infowindow.open(map, marker);
 
-  placesId.push(place.place_id);
-
-  if (placesId[1]) {
-    const directionsService = new google.maps.DirectionsService();
-    const directionsRenderer = new google.maps.DirectionsRenderer();
-    directionsRenderer.setMap(map);
-
-    calculateAndDisplayRoute(directionsService, directionsRenderer);
-  }
+  if (!isWaypt) { startEndIds.push(place.place_id); }
+  if (isWaypt) { waypts.push(place.place_id); }
 };
 
 
 var calculateAndDisplayRoute = (directionsService, directionsRenderer) => {
 
-  console.log('placesId = ', placesId);
+  console.log('calculateAndDisplayRoute startEndIds = ', startEndIds);
   directionsService.route(
     {
-      origin: { placeId: placesId[0] },
-      destination: { placeId: placesId[1] },
+      origin: { placeId: startEndIds[0] },
+      destination: { placeId: startEndIds[1] },
+      // waypoints: waypts,
+      // optimizeWaypoints: true,
       travelMode: google.maps.TravelMode.DRIVING,
     },
     (response, status) => {
-      if (status === "OK") {
+      if (status === 'OK') {
         console.log('response = ', response);
         directionsRenderer.setDirections(response);
       } else {
-        window.alert("Directions request failed due to " + status);
+        window.alert('Directions request failed due to ' + status);
       }
     }
   );

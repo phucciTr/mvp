@@ -48,3 +48,8 @@ body {
   position: relative;
   left: 630px;
 }
+
+#submit {
+  position: relative;
+  left: 500px;
+}

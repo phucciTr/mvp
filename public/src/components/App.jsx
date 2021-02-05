@@ -3,18 +3,25 @@ var App = () => (
     <h1>Hello</h1>
     <div>
       <input
-      id="pac-input"
+      id="start-point"
       className="controls"
       type="text"
       placeholder="Enter start location"/>
 
-    <span id="dest">Enter destinations</span>
-      <input
-      id="dest1"
+    <input
+      id="end-point"
       className="controls"
       type="text"
-      placeholder="Enter destination" />
+      placeholder="Enter final destination" />
     </div>
+
+    <input type="submit" id="submit"/>
+    <span id="dest">Enter destinations</span>
+    <input
+    id="waypoints"
+    className="controls"
+    type="text"
+    placeholder="Enter en-route destinations" />
 
     <div id="map"></div>
     <div id="infowindow-content">
