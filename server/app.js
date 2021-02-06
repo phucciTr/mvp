@@ -22,18 +22,18 @@ app.post('/sms', (req, res) => {
   let $res = res;
 
   nexmo.message.sendSms('18777506942', outgoing, url, (err, res) => {
-  if (err) {
-    console.log('err = ', err);
-    $res.send(400);
-  } else {
-    if (res.messages[0]['status'] === "0") {
+    if (err) {
+      console.log('err = ', err);
+      $res.send(400);
+    } else {
+      if (res.messages[0]['status'] === "0") {
         console.log("Message sent successfully.");
         $res.send(201);
-    } else {
+      } else {
         console.log(`Message failed with error: ${res.messages[0]['error-text']}`);
         $res.send(400);
+      }
     }
-  }
   });
 });
 
