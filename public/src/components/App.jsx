@@ -1,6 +1,7 @@
 var App = () => (
   <div id="map-display">
     <h1>Hello</h1>
+    <a href="" id="url"></a>
     <div>
       <input
       id="start-point"
@@ -27,7 +28,6 @@ var App = () => (
     <div id="map"></div>
     <div id="infowindow-content">
       <span id="place-name" className="title"></span><br />
-      {/* <strong>Place ID:</strong> <span id="place-id"></span><br /> */}
       <span id="place-address"></span>
     </div>
   </div>

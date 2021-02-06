@@ -116,7 +116,7 @@ var calculateAndDisplayRoute = (directionsService, directionsRenderer) => {
         let re_ordered_waypoints = response.routes[0].waypoint_order;
         let optimizedWaypoints = getOptWaypoints(re_ordered_waypoints);
         let dirUrl = generateURL(optimizedWaypoints);
-        console.log('dirUrl = ', dirUrl);
+        $('#url').attr('href', dirUrl).text('Link To Nav');
 
         directionsRenderer.setDirections(response);
       } else {
