@@ -99,9 +99,6 @@ var placeChangeHandler = (autocomp, isWaypt) => {
 
 var calculateAndDisplayRoute = (directionsService, directionsRenderer) => {
 
-  console.log('calculateAndDisplayRoute startEndIds = ', startEndIds);
-  console.log('calculateAndDisplayRoute waypts = ', waypts);
-
   directionsService.route(
     {
       origin: { placeId: startEndIds[0] },

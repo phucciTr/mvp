@@ -34,6 +34,5 @@ bower_components/
 .floo
 .flooignore
 
-server/config/nexmo.js
 server/node_modules
 public/node_modules
