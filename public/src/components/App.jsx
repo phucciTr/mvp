@@ -1,28 +1,12 @@
+import StartPoint from './StartPoint.js';
+import EndPoint from './EndPoint.js';
+import WayPoints from './WayPoints.js';
+
 var App = () => (
   <div id="map-display">
-    <h1>Hello</h1>
-    <a href="" id="url"></a>
-    <div>
-      <input
-      id="start-point"
-      className="controls"
-      type="text"
-      placeholder="Enter start location"/>
-
-    <input
-      id="end-point"
-      className="controls"
-      type="text"
-      placeholder="Enter final destination" />
-    </div>
-
-    <input type="submit" id="submit"/>
-    <span id="dest">Enter destinations</span>
-    <input
-    id="waypoints"
-    className="controls"
-    type="text"
-    placeholder="Enter en-route destinations" />
+    <StartPoint/>
+    <EndPoint/>
+    <WayPoints/>
 
     <div id="right-panel"></div>
     <div id="map"></div>
