@@ -23,6 +23,7 @@ var App = () => (
     type="text"
     placeholder="Enter en-route destinations" />
 
+    <div id="right-panel"></div>
     <div id="map"></div>
     <div id="infowindow-content">
       <span id="place-name" className="title"></span><br />

@@ -13,6 +13,8 @@ function initMap() {
   const directionsRenderer = new google.maps.DirectionsRenderer();
   directionsRenderer.setMap(map);
 
+  directionsRenderer.setPanel($('#right-panel')[0]);
+
   $('#submit').click(() => calculateAndDisplayRoute(directionsService, directionsRenderer));
 
   const startPoint = $('#start-point')[0];
