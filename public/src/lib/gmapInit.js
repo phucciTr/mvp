@@ -2,6 +2,8 @@ var startEndIds = [];
 var waypts = [];
 var map, marker, infowindow, infowindowContent;
 
+var insertWp = [];
+
 
 function initMap() {
   map = new google.maps.Map($('#map')[0], {
@@ -12,7 +14,6 @@ function initMap() {
   const directionsService = new google.maps.DirectionsService();
   const directionsRenderer = new google.maps.DirectionsRenderer();
   directionsRenderer.setMap(map);
-
   directionsRenderer.setPanel($('#right-panel')[0]);
 
   $('#submit').click(() => calculateAndDisplayRoute(directionsService, directionsRenderer));
@@ -57,33 +58,39 @@ function initMap() {
 var placeChangeHandler = (autocomp, isWaypt) => {
 
   infowindow.close();
+
   let place = autocomp.getPlace();
+  let address = place.name;
+  let id = place.place_id;
+  let placeLoc = place.geometry.location;
 
   if (!place.geometry) { return; }
 
   if (place.geometry.viewport) {
     map.fitBounds(place.geometry.viewport);
   } else {
-    map.setCenter(place.geometry.location);
+    map.setCenter(placeLoc);
     map.setZoom(17);
   }
 
   // Set the position of the marker using the place ID and location.
   marker.setPlace({
-    placeId: place.place_id,
-    location: place.geometry.location,
+    placeId: id,
+    location: placeLoc,
   });
 
   marker.setVisible(true);
-  infowindowContent.children.namedItem('place-name').textContent = place.name;
-  infowindowContent.children.namedItem('place-id').textContent = place.place_id;
-  infowindowContent.children.namedItem('place-address').textContent = place.formatted_address;
+  infowindowContent.children.namedItem('place-name').textContent = address;
   infowindow.open(map, marker);
 
-  if (!isWaypt) { startEndIds.push(place.place_id); }
+  if (!isWaypt) { startEndIds.push(id); }
   if (isWaypt) {
+    let point = {};
+    point[id] = address;
+    insertWp.push(point);
+
     waypts.push({
-        location: { placeId: place.place_id },
+        location: { placeId: id },
         stopover: true
     });
   }
@@ -105,7 +112,12 @@ var calculateAndDisplayRoute = (directionsService, directionsRenderer) => {
     },
     (response, status) => {
       if (status === 'OK') {
-        console.log('response = ', response);
+
+        let re_ordered_waypoints = response.routes[0].waypoint_order;
+        let optimizedWaypoints = getOptWaypoints(re_ordered_waypoints);
+        let dirUrl = generateURL(optimizedWaypoints);
+        console.log('dirUrl = ', dirUrl);
+
         directionsRenderer.setDirections(response);
       } else {
         window.alert('Directions request failed due to ' + status);
@@ -115,6 +127,48 @@ var calculateAndDisplayRoute = (directionsService, directionsRenderer) => {
 
 };
 
+var generateURL = (optimizedWaypoints) => {
+  let startId = startEndIds[0];
+  let endId = startEndIds[1];
+  let dirUrl = `https://www.google.com/maps/dir/?api=1&origin=start&origin_place_id=${startId}&destination=end&destination_place_id=${endId}&travelmode=driving`;
+  dirUrl = attachWaypoints(dirUrl, optimizedWaypoints);
+  dirUrl = attachWaypointsIds(dirUrl, optimizedWaypoints);
+  return dirUrl;
+};
 
+
+var attachWaypointsIds = (dirUrl, optimizedWaypoints) => {
+  let last = optimizedWaypoints.length - 1;
+  dirUrl += 'waypoint_place_ids=';
+
+  optimizedWaypoints.forEach((point, index) => {
+    let id = Object.keys(point)[0];
+    dirUrl += (index === last) ? id : (id + '%7C');
+  });
+
+  return dirUrl;
+}
+
+var attachWaypoints = (dirUrl, optimizedWaypoints) => {
+  let last = optimizedWaypoints.length - 1;
+  dirUrl += `&waypoints=`;
+
+  optimizedWaypoints.forEach((point, index) => {
+    dirUrl += (index === last) ? 'id&' : 'id%7C';
+  });
+
+  return dirUrl;
+};
+
+
+var getOptWaypoints = (orderedWpIndexes) => {
+  let optimizedWaypoints = [];
+
+  orderedWpIndexes.forEach((wpIndex) => {
+    optimizedWaypoints.push(insertWp[wpIndex])
+  });
+
+  return optimizedWaypoints
+};
 
 export default initMap;
