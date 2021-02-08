@@ -34,7 +34,7 @@ Once the project moves into development, the press release can be used as a touc
 ## Problem ##
   > Describe the problem your product solves.
 
-    > You have a multiple en-route destinations within your grocery your trip, and Google / Apple maps only navigate you in the non-optimized destinations input, and you wonder if there's a way to know in what order should the routes be in to  save you the most time without having to do the math on your own or guessing?
+    > You have a multiple en-route destinations within your grocery trip, and Google / Apple maps only navigate you in the non-optimized destinations input, and you wonder if there's a way to know in what order should the routes be in to save you the most time without having to do the math on your own or guessing?
 
 ## Solution ##
   > Describe how your product elegantly solves the problem.
