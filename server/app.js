@@ -9,10 +9,15 @@ const { nexmo } = require('./lib/sendSMS');
 const app = express();
 const port = 3000;
 
-app.use(cors());
+// app.use(cors());
 app.use('/', express.static(path.join(__dirname, './../public/')));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
+
+
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static('./../public/'));
+}
 
 app.post('/sms', (req, res) => {
 
