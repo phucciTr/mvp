@@ -35,4 +35,3 @@ bower_components/
 .flooignore
 
 server/node_modules
-public/node_modules
